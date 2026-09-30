@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GeekZone - Produtos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>GeekZone</h1>
+            <p>Gerenciamento de Produtos</p>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- DASHBOARD -->
+
+        <section class="dashboard">
+
+            <div class="card">
+                <span>Produtos</span>
+                <strong id="totalProdutos">0</strong>
+            </div>
+
+            <div class="card">
+                <span>Estoque baixo</span>
+                <strong id="estoqueBaixo">0</strong>
+            </div>
+
+            <div class="card">
+                <span>Sem estoque</span>
+                <strong id="semEstoque">0</strong>
+            </div>
+
+            <div class="card">
+                <span>Valor do estoque</span>
+                <strong id="valorEstoque">R$ 0,00</strong>
+            </div>
+
+        </section>
+
+
+        <!-- CADASTRO -->
+
+        <section class="formulario">
+
+            <h2>Cadastro de Produto</h2>
+
+            <div class="imagem-area">
+
+                <img
+                    id="previewImagem"
+                    src="https://via.placeholder.com/180x180?text=Produto"
+                    alt="Imagem do produto"
+                >
+
+                <label for="imagem">
+                    Escolher imagem
+                </label>
+
+                <input
+                    type="file"
+                    id="imagem"
+                    accept="image/*"
+                >
+
+            </div>
+
+
+            <div class="campos">
+
+                <div>
+                    <label>Nome do produto</label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Ex: Mouse Gamer"
+                    >
+                </div>
+
+
+                <div>
+                    <label>Categoria</label>
+
+                    <input
+                        type="text"
+                        id="categoria"
+                        placeholder="Ex: Eletrônicos"
+                    >
+                </div>
+
+
+                <div>
+                    <label>Preço</label>
+
+                    <input
+                        type="number"
+                        id="preco"
+                        placeholder="Ex: 89.90"
+                        step="0.01"
+                    >
+                </div>
+
+
+                <div>
+                    <label>Estoque</label>
+
+                    <input
+                        type="number"
+                        id="estoque"
+                        placeholder="Ex: 10"
+                        min="0"
+                    >
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn-cadastrar"
+                onclick="cadastrarProduto()"
+            >
+                + Cadastrar Produto
+            </button>
+
+        </section>
+
+
+        <!-- CONSULTA -->
+
+        <section class="produtos">
+
+            <div class="titulo-produtos">
+
+                <div>
+                    <h2>Produtos cadastrados</h2>
+                    <p>Consulte, altere ou exclua produtos.</p>
+                </div>
+
+                <input
+                    type="text"
+                    id="pesquisa"
+                    placeholder="🔎 Pesquisar produto..."
+                    oninput="mostrarProdutos()"
+                >
+
+            </div>
+
+
+            <div class="tabela-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Imagem</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="listaProdutos"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
