@@ -138,8 +138,8 @@
     </div>
   </div>
 
-  <!-- Widget Chatbot Cthulhu -->
-  <div id="cthulhu-chat-widget" class="chat-widget">
+  <!-- Widget Chatbot Cthulhu com Microfone -->
+  <div id="class-bot" class="chat-widget">
     <button id="chat-toggle-btn" class="chat-toggle-btn" title="Invocar Cthulhu">
       <i class="fa-solid fa-spaghetti-monster-flying"></i>
     </button>
@@ -152,8 +152,14 @@
         <button id="close-chat" class="close-btn">&times;</button>
       </div>
       <div id="chat-messages" class="chat-messages"></div>
+      
+      <div id="mic-status" class="mic-status">Aguardando áudio...</div>
+
       <div class="chat-input-area">
-        <input type="text" id="chat-input" placeholder="Invoque uma pergunta ou peça um desconto...">
+        <button id="mic-btn" class="mic-btn" title="Falar por voz">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <input type="text" id="chat-input" placeholder="Invoque uma pergunta ou fale no microfone...">
         <button id="chat-send-btn" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
@@ -163,5 +169,6 @@
   <script src="js/shop.js"></script>
   <script src="mochila/mochila.js"></script>
   <script src="js/louja.js"></script>
+  <script src="cthulhu-bot.js"></script>
 </body>
 </html>
