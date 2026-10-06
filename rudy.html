@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XenoStore - Artefatos Alienígenas & Nerds</title>
+    <link rel="stylesheet" href="css/rudy.css">
+</head>
+<body>
+
+    <!-- Cabeçalho Principal -->
+    <header class="topo">
+        <h1>👽 XENOSTORE</h1>
+        <p>Artefatos Nerds e Tecnologias Extra-Terrestres para Coletores Galácticos</p>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        
+        <!-- Vitrine de Produtos -->
+        <section class="produtos-section">
+            <h2>🛸 Catálogo de Espécimes</h2>
+            <div class="grid-produtos">
+                
+                <article class="card-produto">
+                    <div class="produto-img">🧪</div>
+                    <h3>Ovo de Xenomorfo Embalado</h3>
+                    <p class="descricao">Edição de colecionador. Cuidado ao abrir a caixa!</p>
+                    <p class="preco">R$ 299,90</p>
+                    <button onclick="adicionarAoCarrinho('Ovo de Xenomorfo Embalado', 299.90)">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="card-produto">
+                    <div class="produto-img">🗡️</div>
+                    <h3>Adaga de Plasma Yautja</h3>
+                    <p class="descricao">Forjada em liga metálica desconhecida. Corte molecular.</p>
+                    <p class="preco">R$ 450,00</p>
+                    <button onclick="adicionarAoCarrinho('Adaga de Plasma Yautja', 450.00)">Adicionar ao Carrinho</button>
+                </article>
+
+                <article class="card-produto">
+                    <div class="produto-img">🔫</div>
+                    <h3>Blaster M41A Pulse Rifle</h3>
+                    <p class="descricao">Réplica funcional em escala 1:1 com contador digital de munição.</p>
+                    <p class="preco">R$ 890,00</p>
+                    <button onclick="adicionarAoCarrinho('Blaster M41A Pulse Rifle', 890.00)">Adicionar ao Carrinho</button>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Painel do Carrinho -->
+        <aside class="carrinho-section">
+            <h2>🛒 Carrinho Orbital</h2>
+            <ul id="lista-carrinho" class="lista-carrinho">
+                <li class="carrinho-vazio">Seu carrinho está vazio.</li>
+            </ul>
+            <div class="carrinho-total">
+                <span>Total:</span>
+                <strong id="total-valor">R$ 0,00</strong>
+            </div>
+            <button class="btn-finalizar" onclick="finalizarCompra()">Finalizar Pedido Intergaláctico</button>
+        </aside>
+
+    </main>
+
+    <!-- Botão Flutuante do Chatbot Alienígena -->
+    <button id="chat-toggle" class="chat-toggle-btn" title="Falar com o Xenomimico" onclick="alternarChat()">
+        👽
+    </button>
+
+    <!-- Container do Chatbot (Oculto por padrão) -->
+    <div id="chat-widget" class="chat-widget escondido">
+        <div class="chat-header">
+            <h3>👾 XenoBot (Atendimento Xenomorfo)</h3>
+            <button class="btn-fechar" onclick="alternarChat()">✕</button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="message bot">Ssshhh... *Gorgolejo bioluminescente*... O que você busca nesta galáxia, humano?</div>
+        </div>
+        <form id="chat-form" class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Pergunte sobre frete, desconto ou o mestre..." required autocomplete="off">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script src="js/rudy.js"></script>
+</body>
+</html>

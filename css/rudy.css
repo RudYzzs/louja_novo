@@ -1,0 +1,311 @@
+/* ==========================================================================
+   PALETA DE CORES ALIENÍGENA
+   - Slime Green: #39ff14
+   - Ghoulish Gray-Blue: #1c2833 / #121921
+   - Murky Magenta: #4a004a / #8b008b
+   ========================================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0a0d12;
+    color: #e0e6ed;
+    padding-bottom: 40px;
+}
+
+/* Cabeçalho */
+.topo {
+    background: linear-gradient(180deg, #4a004a 0%, #1c2833 100%);
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 3px solid #39ff14;
+    box-shadow: 0 4px 15px rgba(57, 255, 20, 0.2);
+}
+
+.topo h1 {
+    color: #39ff14;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+}
+
+.topo p {
+    color: #b388ff;
+    margin-top: 5px;
+}
+
+/* Layout Grid Principal */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 30px;
+}
+
+@media (max-width: 850px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Vitrine de Produtos */
+.produtos-section h2, .carrinho-section h2 {
+    color: #39ff14;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #4a004a;
+    padding-bottom: 10px;
+}
+
+.grid-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card-produto {
+    background: #1c2833;
+    border: 1px solid #8b008b;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(139, 0, 139, 0.6);
+}
+
+.produto-img {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.card-produto h3 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.card-produto .descricao {
+    color: #a0aec0;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.card-produto .preco {
+    color: #39ff14;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card-produto button {
+    background: #4a004a;
+    color: #39ff14;
+    border: 1px solid #39ff14;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.card-produto button:hover {
+    background: #39ff14;
+    color: #0a0d12;
+}
+
+/* Carrinho Sidebar */
+.carrinho-section {
+    background: #121921;
+    border: 1px solid #39ff14;
+    border-radius: 10px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.lista-carrinho {
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.item-carrinho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #1c2833;
+    font-size: 0.9rem;
+}
+
+.carrinho-vazio {
+    color: #718096;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.carrinho-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    border-top: 2px solid #8b008b;
+}
+
+.carrinho-total strong {
+    color: #39ff14;
+}
+
+.btn-finalizar {
+    width: 100%;
+    padding: 12px;
+    background: #39ff14;
+    color: #0a0d12;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-finalizar:hover {
+    background: #2ccf0f;
+}
+
+/* Chatbot Flutuante (Xenomorfo) */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #4a004a;
+    border: 2px solid #39ff14;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    z-index: 1000;
+    transition: transform 0.2s;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.chat-widget {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 350px;
+    background: #121921;
+    border: 1px solid #8b008b;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.chat-widget.escondido {
+    display: none;
+}
+
+.chat-header {
+    background: #4a004a;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #39ff14;
+}
+
+.chat-header h3 {
+    color: #39ff14;
+    font-size: 0.95rem;
+}
+
+.btn-fechar {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.chat-messages {
+    height: 250px;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-width: 85%;
+}
+
+.bot {
+    background: #2a082a;
+    color: #e0e6ed;
+    border-left: 3px solid #8b008b;
+    align-self: flex-start;
+}
+
+.user {
+    background: #1c2833;
+    color: #39ff14;
+    border-right: 3px solid #39ff14;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    background: #1c2833;
+    gap: 8px;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #8b008b;
+    background: #0a0d12;
+    color: #ffffff;
+    outline: none;
+}
+
+.chat-input-area button {
+    background: #39ff14;
+    color: #0a0d12;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
