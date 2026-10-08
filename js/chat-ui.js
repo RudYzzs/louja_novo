@@ -1,5 +1,68 @@
 // frontend/js/chat-ui.js
+// frontend/js/chat-ui.js - Função do Easter Egg Fallout / Pip-Boy
 
+function ativarFalloutMode() {
+  // Ativa o cursor de Necrótico (Ghoul) no body
+  document.body.classList.add('fallout-ghoul-mode');
+
+  // Remove qualquer overlay existente
+  const overlayExistente = document.getElementById('fallout-nuke-overlay');
+  if (overlayExistente) overlayExistente.remove();
+
+  // Cria a estrutura da overlay Pip-Boy
+  const overlay = document.createElement('div');
+  overlay.id = 'fallout-nuke-overlay';
+  overlay.className = 'fallout-nuke-overlay';
+
+  overlay.innerHTML = `
+    <div class="crt-lines"></div>
+    <div class="pipboy-screen">
+      <div class="vault-tec-header">
+        <span>VAULT-TEC OS v3.0.1</span>
+        <span>DEFCON 1</span>
+      </div>
+      <div class="nuke-timer-container">
+        <div class="nuke-status">⚠️ LANÇAMENTO DE MÍSSIL TÁTICO DETECTADO</div>
+        <div class="nuke-countdown" id="nuke-timer">03</div>
+        <div class="nuke-subtext">IMPACTO IMINENTE EM WASTELAND</div>
+      </div>
+      <div class="missile-container" id="missile">🚀</div>
+    </div>
+    <div class="nuke-flash" id="nuke-flash"></div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  let tempoRestante = 3;
+  const timerElemento = document.getElementById('nuke-timer');
+  const missilElemento = document.getElementById('missile');
+  const flashElemento = document.getElementById('nuke-flash');
+
+  // Contagem decrescente
+  const intervalo = setInterval(() => {
+    tempoRestante -= 1;
+    if (tempoRestante > 0) {
+      if (timerElemento) timerElemento.textContent = `0${tempoRestante}`;
+    } else {
+      clearInterval(intervalo);
+      if (timerElemento) timerElemento.textContent = "00";
+
+      // Dispara a animação do míssil
+      if (missilElemento) missilElemento.classList.add('launch');
+
+      // Flash radioativo e encerramento
+      setTimeout(() => {
+        if (flashElemento) flashElemento.classList.add('explode');
+        setTimeout(() => {
+          overlay.remove();
+        }, 1200);
+      }, 1500);
+    }
+  }, 1000);
+}
+
+// Tornar acessível globalmente
+window.ativarFalloutMode = ativarFalloutMode;
 function falar(texto) {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
@@ -39,6 +102,7 @@ async function enviarMensagem() {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 segundos timeout
 
+  
   try {
     // Tenta primeiro a API Flask em Python
     const resposta = await fetch("http://127.0.0.1:5000/api/cerebro", {

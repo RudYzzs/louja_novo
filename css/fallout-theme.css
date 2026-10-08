@@ -1,0 +1,131 @@
+/* frontend/css/fallout-theme.css - Paleta Oficial de Cores Fallout */
+
+:root {
+  /* Cores Oficiais Pip-Boy 3000 Green */
+  --pipboy-green-bright: #1ff705;
+  --pipboy-green-mid: #00bf00;
+  --pipboy-green-dark: #003b00;
+  --pipboy-bg-black: #020d02;
+  
+  /* Cores Oficiais Vault-Tec */
+  --vault-blue: #003366;
+  --vault-yellow: #ffcc00;
+  --vault-yellow-glow: rgba(255, 204, 0, 0.8);
+}
+
+/* 1. Cursor do Rato: Caveira de Necrótico (Ghoul) na cor exata Verde Fósforo (#1ff705) */
+body.fallout-ghoul-mode, 
+body.fallout-ghoul-mode * {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%231ff705' stroke='%23003b00' stroke-width='1.5'><path d='M12 2C6.48 2 2 6.48 2 12c0 3.69 2.47 6.8 5.86 7.72V22h2v-2h4v2h2v-2.28C19.53 18.8 22 15.69 22 12c0-5.52-4.48-10-10-10zm-3 12c-.83 0-1.5-.67-1.5-1.5S8.17 11 9 11s1.5.67 1.5 1.5S9.83 14 9 14zm6 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z'/></svg>"), auto !important;
+  background-color: var(--pipboy-bg-black) !important;
+  color: var(--pipboy-green-bright) !important;
+}
+
+/* 2. Overlay do Míssil Nuclear Pip-Boy CRT */
+.fallout-nuke-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--pipboy-bg-black);
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
+}
+
+/* Moldura do Monitor Pip-Boy */
+.pipboy-screen {
+  width: 90%;
+  max-width: 720px;
+  background-color: rgba(2, 13, 2, 0.95);
+  border: 3px solid var(--pipboy-green-bright);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 0 25px rgba(31, 247, 5, 0.5), inset 0 0 15px rgba(31, 247, 5, 0.25);
+  text-align: center;
+  position: relative;
+}
+
+/* Efeito Scanlines CRT do jogo */
+.crt-lines {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* Cabeçalho no Amarelo Vault-Tec oficial */
+.vault-tec-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--pipboy-green-bright);
+  padding-bottom: 8px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: var(--vault-yellow);
+  text-shadow: 0 0 8px var(--vault-yellow-glow);
+}
+
+.nuke-timer-container {
+  margin: 2.5rem 0;
+}
+
+.nuke-status {
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+  color: var(--pipboy-green-bright);
+  text-shadow: 0 0 10px var(--pipboy-green-bright);
+}
+
+.nuke-countdown {
+  font-size: 6.5rem;
+  font-weight: bold;
+  color: var(--pipboy-green-bright);
+  text-shadow: 0 0 25px var(--pipboy-green-bright);
+  margin: 1rem 0;
+}
+
+.nuke-subtext {
+  font-size: 0.9rem;
+  color: var(--vault-yellow);
+  letter-spacing: 1px;
+}
+
+/* Míssil ICBM */
+.missile-container {
+  position: absolute;
+  bottom: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5rem;
+  transition: bottom 2s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+.missile-container.launch {
+  bottom: 120%;
+  filter: drop-shadow(0 20px 15px var(--vault-yellow));
+}
+
+.icbm-missile {
+  transform: rotate(-45deg);
+}
+
+/* Explosão e Flash Radioativo */
+.nuke-flash {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}
+
+.nuke-flash.explode {
+  opacity: 1;
+  background: radial-gradient(circle, #ffffaa 0%, #ff8800 40%, var(--pipboy-green-bright) 100%);
+}

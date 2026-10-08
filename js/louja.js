@@ -266,4 +266,34 @@ function setupEventListeners() {
       renderProducts(filtered);
     });
   }
+  // frontend/js/louja.js - Adicionar ao final do ficheiro
+
+window.adicionarBrindeAoCarrinho = function () {
+  const brinde = {
+    id: 7777,
+    name: "🔑 Chaveiro Geek Exclusivo (Brinde)",
+    price: 0.00,
+    category: "colecionaveis",
+    image: "https://via.placeholder.com/200/003b00/1ff705?text=Chaveiro+Geek"
+  };
+
+  // Verifica se o brinde já existe no carrinho para evitar duplicados infinitos
+  const itemExistente = cart.find(item => item.id === brinde.id);
+  if (itemExistente) {
+    itemExistente.quantity += 1;
+  } else {
+    cart.push({ ...brinde, quantity: 1 });
+  }
+
+  // Atualiza os totais e a exibição do carrinho
+  if (typeof updateCartUI === 'function') {
+    updateCartUI();
+  }
+
+  // Abre a gaveta do carrinho para o utilizador ver o brinde
+  const cartDrawer = document.getElementById('cart-drawer');
+  if (cartDrawer) {
+    cartDrawer.classList.add('active');
+  }
+};
 }
