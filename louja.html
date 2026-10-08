@@ -3,143 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeekZone | Eletrônicos & Colecionáveis</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <title>GeekZone - Cthulhu Store</title>
+  
+  <link rel="stylesheet" href="css/chat.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/louja.css">
 </head>
-<body class="dark-theme">
+<body>
 
-  <!-- Header / Navbar -->
-  <header class="navbar">
+  <!-- Header -->
+  <header class="header">
     <div class="logo">
-      <i class="fa-solid fa-microchip"></i> GEEK<span>ZONE</span>
+      <h1>GeekZone 🐙</h1>
     </div>
-
+    
     <div class="search-bar">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="search-input" placeholder="Buscar colecionáveis, consoles, figures...">
+      <input type="text" id="search-input" placeholder="Procurar artefatos...">
     </div>
 
     <div class="actions">
-      <button id="add-product-btn" class="btn-action" title="Cadastrar Novo Produto">
-        <i class="fa-solid fa-plus"></i> Novo Item
-      </button>
-
-      <button id="theme-toggle" class="btn-theme" title="Alternar Tema">
+      <button id="theme-toggle" class="btn-secondary" title="Alternar Tema">
         <i class="fa-solid fa-moon"></i>
       </button>
-
+      <button id="add-product-btn" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> Novo Item
+      </button>
       <button id="cart-btn" class="btn-cart">
         <i class="fa-solid fa-cart-shopping"></i>
         <span id="cart-count">0</span>
-        <span id="cart-total" class="cart-total-badge">R$ 0,00</span>
       </button>
     </div>
   </header>
 
-  <!-- Banner Hero -->
-  <section class="hero">
-    <div class="hero-content">
-      <h2>Entregas a partir do Centro de Pindamonhangaba</h2>
-      <p>Entregas via Motoboy Express para até 100 km!</p>
-    </div>
-  </section>
+  <!-- Filtros -->
+  <nav class="categories">
+    <button class="filter-btn active" data-category="all">Todos</button>
+    <button class="filter-btn" data-category="eletronicos">Eletrônicos</button>
+    <button class="filter-btn" data-category="colecionaveis">Colecionáveis</button>
+  </nav>
 
-  <!-- Vitrine de Produtos -->
+  <!-- Grid de Produtos -->
   <main class="container">
-    <div class="filter-bar">
-      <button class="filter-btn active" data-category="all">Todos os Itens</button>
-      <button class="filter-btn" data-category="eletronicos">Eletrônicos</button>
-      <button class="filter-btn" data-category="colecionaveis">Colecionáveis</button>
-    </div>
-
-    <div id="product-grid" class="grid-products"></div>
+    <div id="product-grid" class="product-grid"></div>
   </main>
 
   <!-- Modal do Carrinho -->
-  <div id="cart-modal" class="cart-modal">
-    <div class="cart-content">
-      <div class="cart-header">
-        <h3><i class="fa-solid fa-basket-shopping"></i> Seu Carrinho</h3>
+  <div id="cart-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Seu Carrinho Cósmico</h2>
         <button id="close-cart" class="close-btn">&times;</button>
       </div>
-
+      
       <div id="cart-items" class="cart-items"></div>
 
-      <!-- Módulo de Frete -->
-      <div class="shipping-box">
-        <h4><i class="fa-solid fa-motorcycle"></i> Calcular Frete (Motoboy)</h4>
-        <p class="shipping-subtitle">Ponto Inicial: <strong>Pindamonhangaba - Centro (SP)</strong><br>Tarifa: <strong>R$ 4,00 / km</strong> (Limite: 100 km)</p>
-        
-        <div class="shipping-form">
-          <input type="text" id="shipping-address" placeholder="Seu Endereço / Bairro / Cidade">
-          <div class="shipping-inline">
-            <input type="number" id="shipping-distance" placeholder="Distância (km)" min="1" max="500">
-            <button id="btn-calc-shipping" class="btn-calc-shipping">Calcular</button>
-          </div>
-        </div>
-
-        <div id="shipping-alert" class="shipping-info-alert"></div>
+      <div class="shipping-section" style="margin-top:1.5rem;">
+        <input type="text" id="shipping-address" placeholder="Endereço de entrega" style="width:100%; margin-bottom:8px; padding:8px; border-radius:4px; border:var(--border-cthulhu); background:var(--bg-primary); color:var(--text-primary);">
+        <input type="number" id="shipping-distance" placeholder="Distância em km" style="width:100%; margin-bottom:8px; padding:8px; border-radius:4px; border:var(--border-cthulhu); background:var(--bg-primary); color:var(--text-primary);">
+        <button id="btn-calc-shipping" class="btn-secondary" style="width:100%;">Calcular Frete</button>
+        <p id="shipping-alert" class="alert-error" style="display: none;"></p>
       </div>
 
-      <!-- Totalizadores do Carrinho -->
-      <div class="cart-summary">
-        <div class="summary-row">
-          <span>Subtotal:</span>
-          <span id="cart-subtotal">R$ 0,00</span>
-        </div>
-        <div class="summary-row" id="discount-row" style="display: none; color: var(--cthulhu-green);">
-          <span>Desconto Cthulhu:</span>
-          <span id="cart-discount">-R$ 0,00</span>
-        </div>
-        <div class="summary-row">
-          <span>Frete:</span>
-          <span id="cart-shipping-cost">R$ 0,00</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total Geral:</span>
-          <span id="drawer-cart-total">R$ 0,00</span>
-        </div>
-        <button id="checkout-btn" class="btn-checkout">Finalizar Compra</button>
+      <div class="cart-summary" style="margin-top:1.5rem; border-top:var(--border-cthulhu); padding-top:1rem;">
+        <p style="display:flex; justify-content:space-between;">Subtotal: <span id="cart-subtotal">R$ 0,00</span></p>
+        <p id="discount-row" style="display: none; justify-content:space-between; color: var(--accent-color);">
+          Desconto Cthulhu: <span id="cart-discount">-R$ 0,00</span>
+        </p>
+        <p style="display:flex; justify-content:space-between;">Frete: <span id="cart-shipping-cost">R$ 0,00</span></p>
+        <h3 style="display:flex; justify-content:space-between; margin-top:0.5rem; color:var(--accent-color);">Total: <span id="cart-total">R$ 0,00</span></h3>
       </div>
+
+      <button id="checkout-btn" class="btn-primary" style="width:100%; margin-top:1rem;" disabled>Finalizar Oferenda</button>
     </div>
   </div>
 
-  <!-- Modal de Cadastro de Produto -->
-  <div id="product-modal" class="modal-overlay">
-    <div class="modal-box">
+  <!-- Modal Cadastrar Produto -->
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-box-archive"></i> Cadastrar Novo Produto</h3>
+        <h2>Cadastrar Artefato</h2>
         <button id="close-product-modal" class="close-btn">&times;</button>
       </div>
-      <form id="product-form" class="modal-body">
-        <div class="form-group">
-          <label for="prod-name">Nome do Produto</label>
-          <input type="text" id="prod-name" required placeholder="Ex: Miniatura Cthulhu Eldritch">
-        </div>
-        <div class="form-group">
-          <label for="prod-price">Preço (R$)</label>
-          <input type="number" id="prod-price" step="0.01" min="0.10" required placeholder="Ex: 149.90">
-        </div>
-        <div class="form-group">
-          <label for="prod-category">Categoria</label>
-          <select id="prod-category" required>
-            <option value="colecionaveis">Colecionáveis</option>
-            <option value="eletronicos">Eletrônicos</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="prod-image">URL da Imagem</label>
-          <input type="url" id="prod-image" placeholder="https://exemplo.com/imagem.jpg">
-        </div>
-        <button type="submit" class="btn-checkout"><i class="fa-solid fa-plus-circle"></i> Adicionar à Loja</button>
+      <form id="product-form" style="display:flex; flex-direction:column; gap:12px;">
+        <input type="text" id="prod-name" placeholder="Nome do Produto" required style="padding:10px; background:var(--bg-primary); border:var(--border-cthulhu); color:var(--text-primary); border-radius:4px;">
+        <input type="number" id="prod-price" step="0.01" placeholder="Preço (R$)" required style="padding:10px; background:var(--bg-primary); border:var(--border-cthulhu); color:var(--text-primary); border-radius:4px;">
+        <select id="prod-category" required style="padding:10px; background:var(--bg-primary); border:var(--border-cthulhu); color:var(--text-primary); border-radius:4px;">
+          <option value="eletronicos">Eletrônicos</option>
+          <option value="colecionaveis">Colecionáveis</option>
+        </select>
+        <input type="url" id="prod-image" placeholder="URL da Imagem" style="padding:10px; background:var(--bg-primary); border:var(--border-cthulhu); color:var(--text-primary); border-radius:4px;">
+        <button type="submit" class="btn-primary" style="padding:10px;">Salvar Item</button>
       </form>
     </div>
   </div>
 
-  <!-- Widget Chatbot Cthulhu com Microfone -->
-  <div id="class-bot" class="chat-widget">
+  <!-- Widget Cthulhu Bot -->
+  <div id="cthulhuBot" class="chat-widget">
     <button id="chat-toggle-btn" class="chat-toggle-btn" title="Invocar Cthulhu">
       <i class="fa-solid fa-spaghetti-monster-flying"></i>
     </button>
@@ -147,28 +105,31 @@
     <div id="chat-window" class="chat-window">
       <div class="chat-header">
         <div class="chat-title">
-          <i class="fa-solid fa-eye"></i> Cthulhu, o Vendedor Cósmico
+          <i class="fa-solid fa-eye"></i> Oracle Cthulhu
         </div>
         <button id="close-chat" class="close-btn">&times;</button>
       </div>
+
       <div id="chat-messages" class="chat-messages"></div>
       
-      <div id="mic-status" class="mic-status">Aguardando áudio...</div>
+      <div id="mic-status" class="mic-status">Escutando voz...</div>
 
       <div class="chat-input-area">
-        <button id="mic-btn" class="mic-btn" title="Falar por voz">
+        <button id="mic-btn" class="mic-btn" title="Invocar por voz">
           <i class="fa-solid fa-microphone"></i>
         </button>
-        <input type="text" id="chat-input" placeholder="Invoque uma pergunta ou fale no microfone...">
-        <button id="chat-send-btn" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        <input type="text" id="user-input" placeholder="Digite uma palavra mística...">
+        <button id="chat-send-btn" class="chat-send-btn">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <script src="js/chat.js"></script>
-  <script src="js/shop.js"></script>
-  <script src="mochila/mochila.js"></script>
+  <!-- Scripts -->
+  <script src="js/cthulhu-bot.js"></script>
+  <script src="js/chat-ui.js"></script>
   <script src="js/louja.js"></script>
-  <script src="cthulhu-bot.js"></script>
+  <script src="js/R.E_easteregg.js"></script>
 </body>
 </html>

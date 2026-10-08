@@ -1,62 +1,49 @@
-// cthulhu-bot.js
+// frontend/js/cthulhu-bot.js
 
 class CthulhuBot {
   constructor(apiKey) {
     this.apiKey = apiKey;
     this.apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.apiKey}`;
-    this.activeDiscountPercentage = 0; // Porcentagem de desconto concedida pelo Cthulhu
+    this.activeDiscountPercentage = 0;
   }
 
-  /**
-   * Envia uma mensagem para a API do Gemini com o contexto do Cthulhu.
-   * @param {string} userMessage - Mensagem/enigma enviado pelo usuário.
-   */
   async conversar(userMessage) {
-    const systemPrompt = `Você é o Cthulhu, uma entidade cósmica e mascote da loja GeekZone. 
-Sua personalidade é sombria, misteriosa, mas prestativa e bem-humorada.
-Se o usuário responder a um enigma ou disser palavras mágicas como "Cthulhu", "Invocação" ou "Rituais", conceda 15% de desconto.
-Responda sempre em português de forma concisa.`;
+    const systemPrompt = `Você é Cthulhu, a entidade milenar das profundezas cósmicas e guardião da loja GeekZone.
+Responda de forma sombria, enigmática e com humor geek.
+Se a mensagem contiver as palavras "cthulhu", "desconto", "rito" ou "segredo", conceda 15% de desconto e avise o usuário.`;
 
     try {
       const response = await fetch(this.apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: `${systemPrompt}\n\nUsuário: ${userMessage}` }]
-            }
-          ]
+          contents: [{ role: "user", parts: [{ text: `${systemPrompt}\n\nO mortal diz: ${userMessage}` }] }]
         })
       });
 
-      if (!response.ok) {
-        throw new Error(`Erro API Gemini: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Status API: ${response.status}`);
 
       const data = await response.json();
-      const text = data.candidates[0].content.parts[0].text;
+      const respostaTexto = data.candidates[0].content.parts[0].text;
 
-      // Exemplo de regra: se o usuário citar palavras-chave ou a IA aprovar, ativa o desconto cósmico de 15%
-      if (userMessage.toLowerCase().includes("cthulhu") || userMessage.toLowerCase().includes("desconto")) {
-        this.activeDiscountPercentage = 0.15; // 15% de desconto
+      const msgLower = userMessage.toLowerCase();
+      if (msgLower.includes("cthulhu") || msgLower.includes("desconto") || msgLower.includes("rito")) {
+        this.activeDiscountPercentage = 0.15;
       }
 
-      return text;
+      return respostaTexto;
     } catch (error) {
-      console.error("Erro ao comunicar com o Cthulhu Bot:", error);
-      return "As profundezas do oceano estão silenciosas no momento... Tente novamente mais tarde.";
+      console.warn("Fallback Cthulhu ativado:", error);
+      const msgLower = userMessage.toLowerCase();
+      if (msgLower.includes("cthulhu") || msgLower.includes("desconto") || msgLower.includes("rito")) {
+        this.activeDiscountPercentage = 0.15;
+        return "🐙 O ritual foi aceito! O abismo lhe concede 15% de desconto no carrinho.";
+      }
+      return "Ph'nglui mglw'nafh... As águas estão agitadas, mas eu ainda protejo seus desejos geek.";
     }
   }
 
-  /**
-   * Método chamado pelo louja.js para aplicar regras de desconto no carrinho.
-   */
   calculateDiscounts() {
-    // Pega o subtotal atual a partir do array 'cart' global
     const subtotal = typeof cart !== 'undefined' 
       ? cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) 
       : 0;
@@ -64,21 +51,15 @@ Responda sempre em português de forma concisa.`;
     let discountAmount = subtotal * this.activeDiscountPercentage;
     let finalShippingCost = typeof currentShippingCost !== 'undefined' ? currentShippingCost : 0;
 
-    // Regras adicionais de frete ou desconto por valor de compra
     if (subtotal >= 300 && this.activeDiscountPercentage === 0) {
-      discountAmount = subtotal * 0.10; // 10% padrão se não tiver desconto do Cthulhu
+      discountAmount = subtotal * 0.10;
     } else if (subtotal >= 200) {
-      finalShippingCost = 0; // Frete grátis para compras acima de R$ 200
+      finalShippingCost = 0;
     }
 
-    return {
-      discountAmount,
-      finalShippingCost
-    };
+    return { discountAmount, finalShippingCost };
   }
 }
 
-// Instancia a classe globalmente para o louja.js utilizar
-// IMPORTANTE: Subsitua pela sua chave de API gerada no Google AI Studio
-const GEMINI_API_KEY = "AQ.Ab8RN6K9Sf0G_y670AcBmeYQAp4t7A1TgOV6LrmfNXI62C3aJQ";
+const GEMINI_API_KEY = "SUA_CHAVE_AQUI";
 const cthulhuBotInstance = new CthulhuBot(GEMINI_API_KEY);

@@ -1,12 +1,37 @@
+// frontend/js/louja.js
+
+let products = [
+  { id: 1, name: "Sabre de Luz Jedi", price: 250.00, category: "colecionaveis", image: "https://via.placeholder.com/200/09120e/00ff87?text=Sabre+de+Luz" },
+  { id: 2, name: "Action Figure Goku", price: 150.00, category: "colecionaveis", image: "https://via.placeholder.com/200/09120e/00ff87?text=Goku+Figure" },
+  { id: 3, name: "Headset Gamer RGB", price: 299.90, category: "eletronicos", image: "https://via.placeholder.com/200/09120e/00ff87?text=Headset+RGB" },
+  { id: 4, name: "Teclado Mecânico", price: 350.00, category: "eletronicos", image: "https://via.placeholder.com/200/09120e/00ff87?text=Teclado+Mecanico" }
+];
+
 let cart = [];
+let currentShippingCost = 0;
+let isDeliveryAllowed = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts(products);
   setupEventListeners();
+  updateCartUI();
 });
+
+function addProductToCatalog(productData) {
+  const newProduct = {
+    id: Date.now(),
+    name: productData.name,
+    price: parseFloat(productData.price),
+    category: productData.category,
+    image: productData.image || "https://via.placeholder.com/200/09120e/00ff87?text=GeekZone"
+  };
+  products.push(newProduct);
+}
 
 function renderProducts(productList) {
   const grid = document.getElementById('product-grid');
+  if (!grid) return;
+
   grid.innerHTML = '';
 
   productList.forEach(product => {
@@ -28,6 +53,8 @@ function renderProducts(productList) {
 
 function addToCart(productId) {
   const product = products.find(p => p.id === productId);
+  if (!product) return;
+
   const existingItem = cart.find(item => item.id === productId);
 
   if (existingItem) {
@@ -44,12 +71,42 @@ function removeFromCart(productId) {
   updateCartUI();
 }
 
+function handleShippingCalculation() {
+  const distanceInput = document.getElementById('shipping-distance');
+  const alertEl = document.getElementById('shipping-alert');
+  if (!distanceInput) return;
+
+  const distance = parseFloat(distanceInput.value);
+
+  if (isNaN(distance) || distance < 0) {
+    if (alertEl) {
+      alertEl.style.display = 'block';
+      alertEl.textContent = 'Informe uma distância válida em km.';
+    }
+    return;
+  }
+
+  if (distance > 100) {
+    isDeliveryAllowed = false;
+    currentShippingCost = 0;
+    if (alertEl) {
+      alertEl.style.display = 'block';
+      alertEl.textContent = 'Entrega indisponível: Limite máximo de 100km excedido.';
+    }
+  } else {
+    isDeliveryAllowed = true;
+    currentShippingCost = distance * 2.50;
+    if (alertEl) alertEl.style.display = 'none';
+  }
+
+  updateCartUI();
+}
+
 function updateCartUI() {
   const cartCount = document.getElementById('cart-count');
   const cartTotal = document.getElementById('cart-total');
   const cartSubtotal = document.getElementById('cart-subtotal');
   const cartShippingCost = document.getElementById('cart-shipping-cost');
-  const drawerTotal = document.getElementById('drawer-cart-total');
   const cartItemsContainer = document.getElementById('cart-items');
   const checkoutBtn = document.getElementById('checkout-btn');
   const discountRow = document.getElementById('discount-row');
@@ -75,117 +132,117 @@ function updateCartUI() {
 
   const grandTotal = Math.max(0, subtotal - discountAmount + effectiveShippingCost);
 
-  cartCount.textContent = totalItems;
+  if (cartCount) cartCount.textContent = totalItems;
   
-  const formattedSubtotal = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-  const formattedShipping = `R$ ${effectiveShippingCost.toFixed(2).replace('.', ',')}`;
-  const formattedGrandTotal = `R$ ${grandTotal.toFixed(2).replace('.', ',')}`;
+  if (cartTotal) cartTotal.textContent = `R$ ${grandTotal.toFixed(2).replace('.', ',')}`;
+  if (cartSubtotal) cartSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+  if (cartShippingCost) cartShippingCost.textContent = `R$ ${effectiveShippingCost.toFixed(2).replace('.', ',')}`;
 
-  cartTotal.textContent = formattedGrandTotal;
-  cartSubtotal.textContent = formattedSubtotal;
-  cartShippingCost.textContent = formattedShipping;
-  drawerTotal.textContent = formattedGrandTotal;
-
-  if (discountAmount > 0) {
-    discountRow.style.display = 'flex';
-    discountVal.textContent = `-R$ ${discountAmount.toFixed(2).replace('.', ',')}`;
-  } else {
-    discountRow.style.display = 'none';
+  if (discountRow && discountVal) {
+    if (discountAmount > 0) {
+      discountRow.style.display = 'flex';
+      discountVal.textContent = `-R$ ${discountAmount.toFixed(2).replace('.', ',')}`;
+    } else {
+      discountRow.style.display = 'none';
+    }
   }
 
-  cartItemsContainer.innerHTML = '';
-  if (cart.length === 0) {
-    cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary); margin-top: 1rem;">Seu carrinho está vazio.</p>';
-  } else {
-    cart.forEach(item => {
-      const itemEl = document.createElement('div');
-      itemEl.className = 'cart-item';
-      itemEl.innerHTML = `
-        <div>
-          <h4>${item.name}</h4>
-          <small>${item.quantity}x R$ ${item.price.toFixed(2).replace('.', ',')}</small>
-        </div>
-        <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color: var(--error-color); cursor:pointer;">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      `;
-      cartItemsContainer.appendChild(itemEl);
-    });
+  if (cartItemsContainer) {
+    cartItemsContainer.innerHTML = '';
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary); margin-top: 1rem;">Seu carrinho está vazio.</p>';
+    } else {
+      cart.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'cart-item';
+        itemEl.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div>
+              <h4 style="margin:0; color:var(--text-primary);">${item.name}</h4>
+              <small style="color:var(--text-secondary);">${item.quantity}x R$ ${item.price.toFixed(2).replace('.', ',')}</small>
+            </div>
+            <button onclick="removeFromCart(${item.id})" class="btn-remove">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(itemEl);
+      });
+    }
   }
 
-  if (cart.length === 0 || !isDeliveryAllowed) {
-    checkoutBtn.disabled = true;
-  } else {
-    checkoutBtn.disabled = false;
+  if (checkoutBtn) {
+    checkoutBtn.disabled = (cart.length === 0 || !isDeliveryAllowed);
   }
 }
 
 function abrirCheckout() {
-  const totalItens = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  if (totalItens === 0) {
+  if (cart.length === 0) {
     alert("Seu carrinho está vazio!");
     return;
   }
 
   if (!isDeliveryAllowed) {
-    alert("Não é possível finalizar a compra: O endereço informado ultrapassa o limite de 100km para entrega via motoboy!");
+    alert("Não é possível finalizar a compra: Endereço excede o limite de entrega!");
     return;
   }
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  let discountAmount = 0;
-  let effectiveShippingCost = currentShippingCost;
-
-  if (subtotal >= 300) {
-    discountAmount = subtotal * 0.10;
-  } else if (subtotal >= 200) {
-    effectiveShippingCost = 0;
-  }
-
-  const totalGeral = subtotal - discountAmount + effectiveShippingCost;
-
-  alert(`Pedido confirmado com sucesso!\n\nSubtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}\nDesconto Cósmico: R$ ${discountAmount.toFixed(2).replace('.', ',')}\nFrete: R$ ${effectiveShippingCost.toFixed(2).replace('.', ',')}\nTotal Geral: R$ ${totalGeral.toFixed(2).replace('.', ',')}`);
+  alert("🐙 Pedido confirmado nas profundezas! Obrigado pela compra na GeekZone.");
   
   cart = [];
   currentShippingCost = 0;
-  document.getElementById('shipping-address').value = '';
-  document.getElementById('shipping-distance').value = '';
-  document.getElementById('shipping-alert').style.display = 'none';
-  document.getElementById('cart-modal').classList.remove('open');
+  
+  const modalEl = document.getElementById('cart-modal');
+  if (modalEl) modalEl.classList.remove('open');
+  
   updateCartUI();
 }
 
 function setupEventListeners() {
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
-  });
+  const themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+    });
+  }
 
   const cartModal = document.getElementById('cart-modal');
-  document.getElementById('cart-btn').addEventListener('click', () => cartModal.classList.add('open'));
-  document.getElementById('close-cart').addEventListener('click', () => cartModal.classList.remove('open'));
+  const cartBtn = document.getElementById('cart-btn');
+  const closeCartBtn = document.getElementById('close-cart');
+
+  if (cartBtn && cartModal) cartBtn.addEventListener('click', () => cartModal.classList.add('open'));
+  if (closeCartBtn && cartModal) closeCartBtn.addEventListener('click', () => cartModal.classList.remove('open'));
 
   const productModal = document.getElementById('product-modal');
-  document.getElementById('add-product-btn').addEventListener('click', () => productModal.classList.add('open'));
-  document.getElementById('close-product-modal').addEventListener('click', () => productModal.classList.remove('open'));
+  const addProdBtn = document.getElementById('add-product-btn');
+  const closeProdBtn = document.getElementById('close-product-modal');
 
-  document.getElementById('product-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('prod-name').value.trim();
-    const price = document.getElementById('prod-price').value;
-    const category = document.getElementById('prod-category').value;
-    const image = document.getElementById('prod-image').value.trim();
+  if (addProdBtn && productModal) addProdBtn.addEventListener('click', () => productModal.classList.add('open'));
+  if (closeProdBtn && productModal) closeProdBtn.addEventListener('click', () => productModal.classList.remove('open'));
 
-    if (name && price) {
-      addProductToCatalog({ name, price, category, image });
-      renderProducts(products);
-      productModal.classList.remove('open');
-      document.getElementById('product-form').reset();
-    }
-  });
+  const prodForm = document.getElementById('product-form');
+  if (prodForm) {
+    prodForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('prod-name').value.trim();
+      const price = document.getElementById('prod-price').value;
+      const category = document.getElementById('prod-category').value;
+      const image = document.getElementById('prod-image').value.trim();
 
-  document.getElementById('btn-calc-shipping').addEventListener('click', handleShippingCalculation);
-  document.getElementById('checkout-btn').addEventListener('click', abrirCheckout);
+      if (name && price) {
+        addProductToCatalog({ name, price, category, image });
+        renderProducts(products);
+        if (productModal) productModal.classList.remove('open');
+        prodForm.reset();
+      }
+    });
+  }
+
+  const btnCalcShipping = document.getElementById('btn-calc-shipping');
+  if (btnCalcShipping) btnCalcShipping.addEventListener('click', handleShippingCalculation);
+
+  const checkoutBtn = document.getElementById('checkout-btn');
+  if (checkoutBtn) checkoutBtn.addEventListener('click', abrirCheckout);
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -201,9 +258,12 @@ function setupEventListeners() {
     });
   });
 
-  document.getElementById('search-input').addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(term));
-    renderProducts(filtered);
-  });
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+      renderProducts(filtered);
+    });
+  }
 }
